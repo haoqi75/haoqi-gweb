@@ -1,0 +1,79 @@
+{
+    "files": [
+        {
+            "name": "文档",
+            "type": "folder",
+            "path": "/文档",
+            "children": [
+                {
+                    "name": "项目计划.docx",
+                    "type": "file",
+                    "path": "/文档/项目计划.docx",
+                    "size": "245 KB"
+                },
+                {
+                    "name": "需求分析.pdf",
+                    "type": "file",
+                    "path": "/文档/需求分析.pdf",
+                    "size": "1.2 MB"
+                }
+            ]
+        },
+        {
+            "name": "图片",
+            "type": "folder",
+            "path": "/图片",
+            "children": [
+                {
+                    "name": "封面.jpg",
+                    "type": "file",
+                    "path": "/图片/封面.jpg",
+                    "size": "3.5 MB"
+                },
+                {
+                    "name": "截图.png",
+                    "type": "file",
+                    "path": "/图片/截图.png",
+                    "size": "1.8 MB"
+                }
+            ]
+        },
+        {
+            "name": "代码",
+            "type": "folder",
+            "path": "/代码",
+            "children": [
+                {
+                    "name": "index.html",
+                    "type": "file",
+                    "path": "/代码/index.html",
+                    "size": "12 KB"
+                },
+                {
+                    "name": "script.js",
+                    "type": "file",
+                    "path": "/代码/script.js",
+                    "size": "45 KB"
+                },
+                {
+                    "name": "styles.css",
+                    "type": "file",
+                    "path": "/代码/styles.css",
+                    "size": "8 KB"
+                }
+            ]
+        },
+        {
+            "name": "README.md",
+            "type": "file",
+            "path": "/README.md",
+            "size": "4 KB"
+        },
+        {
+            "name": "config.json",
+            "type": "file",
+            "path": "/config.json",
+            "size": "2 KB"
+        }
+    ]
+}
