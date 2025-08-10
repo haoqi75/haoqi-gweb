@@ -1,6 +1,6 @@
 // 当前路径
 let currentPath = '/';
-let fileData = { files: [] }; // 初始化为空，将从JSON加载
+let fileData = { files: [] };
 
 // DOM元素
 const fileListElement = document.getElementById('fileList');
@@ -70,6 +70,14 @@ function renderFileList(path) {
         
         fileItem.addEventListener('click', () => handleFileClick(file));
         
+        // 右键菜单 - 在新标签页打开
+        fileItem.addEventListener('contextmenu', (e) => {
+            e.preventDefault();
+            if (file.type === 'file' && file.url) {
+                window.open(file.url, '_blank');
+            }
+        });
+        
         fileListElement.appendChild(fileItem);
     });
 }
@@ -104,11 +112,32 @@ function handleFileClick(file) {
     }
 }
 
-// 打开文件
+// 打开文件 - 实际实现
 function openFile(file) {
-    // 在实际应用中，这里会根据文件类型进行不同的处理
-    // 例如：显示内容、下载文件、在新标签页打开等
-    alert(`打开文件: ${file.path}\n\n这是一个演示，实际应用中会根据文件类型进行相应处理。`);
+    if (!file.url) {
+        alert(`文件 ${file.name} 没有可访问的URL`);
+        return;
+    }
+    
+    // 根据文件类型处理
+    const extension = file.name.split('.').pop().toLowerCase();
+    
+    // 可以直接在浏览器中打开的文件类型
+    const viewableTypes = ['pdf', 'jpg', 'jpeg', 'png', 'gif', 'html', 'htm', 'txt', 'md'];
+    
+    if (viewableTypes.includes(extension)) {
+        // 直接在新标签页打开
+        window.open(file.url, '_blank');
+    } else {
+        // 其他类型文件尝试下载
+        const a = document.createElement('a');
+        a.href = file.url;
+        a.download = file.name;
+        a.target = '_blank';
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+    }
 }
 
 // 返回上一级

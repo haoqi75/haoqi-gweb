@@ -9,13 +9,15 @@
                     "name": "项目计划.docx",
                     "type": "file",
                     "path": "/文档/项目计划.docx",
-                    "size": "245 KB"
+                    "size": "245 KB",
+                    "url": "https://example.com/documents/project-plan.docx"
                 },
                 {
                     "name": "需求分析.pdf",
                     "type": "file",
                     "path": "/文档/需求分析.pdf",
-                    "size": "1.2 MB"
+                    "size": "1.2 MB",
+                    "url": "https://example.com/documents/requirements.pdf"
                 }
             ]
         },
@@ -28,13 +30,15 @@
                     "name": "封面.jpg",
                     "type": "file",
                     "path": "/图片/封面.jpg",
-                    "size": "3.5 MB"
+                    "size": "3.5 MB",
+                    "url": "https://example.com/images/cover.jpg"
                 },
                 {
                     "name": "截图.png",
                     "type": "file",
                     "path": "/图片/截图.png",
-                    "size": "1.8 MB"
+                    "size": "1.8 MB",
+                    "url": "https://example.com/images/screenshot.png"
                 }
             ]
         },
@@ -47,33 +51,31 @@
                     "name": "index.html",
                     "type": "file",
                     "path": "/代码/index.html",
-                    "size": "12 KB"
+                    "size": "12 KB",
+                    "url": "index.html"
                 },
                 {
                     "name": "script.js",
                     "type": "file",
                     "path": "/代码/script.js",
-                    "size": "45 KB"
+                    "size": "45 KB",
+                    "url": "script.js"
                 },
                 {
                     "name": "styles.css",
                     "type": "file",
                     "path": "/代码/styles.css",
-                    "size": "8 KB"
+                    "size": "8 KB",
+                    "url": "styles.css"
                 }
             ]
         },
         {
-            "name": "README.md",
+            "name": "GitHub.url",
             "type": "file",
-            "path": "/README.md",
-            "size": "4 KB"
-        },
-        {
-            "name": "config.json",
-            "type": "file",
-            "path": "/config.json",
-            "size": "2 KB"
+            "path": "/GitHub.url",
+            "size": "4 KB",
+            "url": "https://example.com/README.md"
         }
     ]
 }
