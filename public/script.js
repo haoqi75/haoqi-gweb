@@ -183,7 +183,8 @@ function getFileIcon(filename) {
         'css': '🎨',
         'json': '🔣',
         'md': '📝',
-        'txt': '📝'
+        'txt': '📝',
+        'mp3': '🎵'
     };
     
     return icons[extension] || '📄';

@@ -1,81 +1,25 @@
 {
     "files": [
         {
-            "name": "文档",
+            "name": "StepManiaX",
             "type": "folder",
-            "path": "/文档",
+            "path": "/StepManiaX",
             "children": [
                 {
-                    "name": "项目计划.docx",
+                    "name": "Ari Oh (Factory Team Eurobeat Mix) - Jenny Kee.mp3",
                     "type": "file",
-                    "path": "/文档/项目计划.docx",
-                    "size": "245 KB",
-                    "url": "https://example.com/documents/project-plan.docx"
+                    "path": "/StepManiaX/Ari Oh (Factory Team Eurobeat Mix) - Jenny Kee.mp3",
+                    "size": "1.49 MB",
+                    "url": "https://opl.qtdt.dpdns.org/d/StepManiaX/Ari%20Oh%20(Factory%20Team%20Eurobeat%20Mix)%20-%20Jenny%20Kee.mp3?sign=BnZuD6OJjBDCq87PjMZT-CxwhTvZ0HicyYqr6diS0PY=:0"
                 },
-                {
-                    "name": "需求分析.pdf",
-                    "type": "file",
-                    "path": "/文档/需求分析.pdf",
-                    "size": "1.2 MB",
-                    "url": "https://example.com/documents/requirements.pdf"
-                }
-            ]
-        },
-        {
-            "name": "图片",
-            "type": "folder",
-            "path": "/图片",
-            "children": [
-                {
-                    "name": "封面.jpg",
-                    "type": "file",
-                    "path": "/图片/封面.jpg",
-                    "size": "3.5 MB",
-                    "url": "https://example.com/images/cover.jpg"
-                },
-                {
-                    "name": "截图.png",
-                    "type": "file",
-                    "path": "/图片/截图.png",
-                    "size": "1.8 MB",
-                    "url": "https://example.com/images/screenshot.png"
-                }
-            ]
-        },
-        {
-            "name": "代码",
-            "type": "folder",
-            "path": "/代码",
-            "children": [
-                {
-                    "name": "index.html",
-                    "type": "file",
-                    "path": "/代码/index.html",
-                    "size": "12 KB",
-                    "url": "index.html"
-                },
-                {
-                    "name": "script.js",
-                    "type": "file",
-                    "path": "/代码/script.js",
-                    "size": "45 KB",
-                    "url": "script.js"
-                },
-                {
-                    "name": "styles.css",
-                    "type": "file",
-                    "path": "/代码/styles.css",
-                    "size": "8 KB",
-                    "url": "styles.css"
-                }
             ]
         },
         {
             "name": "GitHub.url",
             "type": "file",
             "path": "/GitHub.url",
-            "size": "4 KB",
-            "url": "https://example.com/README.md"
+            "size": "1 B",
+            "url": "https://github.com/haoqi75/haoqi-gweb"
         }
     ]
 }
