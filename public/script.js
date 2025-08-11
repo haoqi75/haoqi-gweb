@@ -1,7 +1,3 @@
-// 当前路径
-let currentPath = '/';
-let fileData = { files: [] };
-
 function initRouter() {
     // 初始加载时检查哈希路由
     window.addEventListener('load', () => {
@@ -35,11 +31,9 @@ function updateHashPath(path) {
     window.location.hash = `#!/${normalizedPath}`;
 }
 
-// 修改原有的 renderFileList 函数
-function renderFileList(path) {
-    currentPath = path;
-    currentPathElement.textContent = path;
-    updateHashPath(path); // 添加这行来更新URL
+// 当前路径
+let currentPath = '/';
+let fileData = { files: [] };
 
 // DOM元素
 const fileListElement = document.getElementById('fileList');
@@ -81,6 +75,7 @@ async function loadFileData() {
 function renderFileList(path) {
     currentPath = path;
     currentPathElement.textContent = path;
+    updateHashPath(path); // 添加这行来更新URL
     
     const files = getFilesAtPath(path);
     fileListElement.innerHTML = '';
