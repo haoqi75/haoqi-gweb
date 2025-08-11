@@ -110,7 +110,10 @@ function renderFileList(path) {
 // 获取路径下的文件
 function getFilesAtPath(path) {
     if (path === '/') {
-        return fileData.files || [];
+        return (fileData.files || []).map(item => ({
+            ...item,
+            path: `/${item.name}`
+        }));
     }
     
     const pathParts = path.split('/').filter(part => part !== '');
@@ -134,7 +137,9 @@ function getFilesAtPath(path) {
 // 处理文件点击
 function handleFileClick(file) {
     if (file.type === 'folder') {
-        renderFileList(file.path);
+        // 确保路径以/开头且格式正确
+        const newPath = file.path.startsWith('/') ? file.path : `/${file.path}`;
+        renderFileList(newPath);
     } else {
         openFile(file);
     }
