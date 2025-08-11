@@ -97,10 +97,18 @@ function renderFileList(path) {
         fileItem.addEventListener('click', () => handleFileClick(file));
         
         fileItem.addEventListener('contextmenu', (e) => {
-            e.preventDefault();
-            if (file.type === 'file' && file.url) {
-                window.open(file.url, '_blank');
-            }
+    e.preventDefault();
+    const extension = file.name.split('.').pop().toLowerCase();
+    const audioTypes = ['mp3', 'wav', 'ogg', 'aac', 'flac'];
+    
+    if (audioTypes.includes(extension)) {
+        // 右键音乐文件：提供两个选项
+        if (confirm(`"${file.name}"\n\n左键将在播放器中打开\n是否要直接下载？`)) {
+            downloadFile(file);
+        }
+    } else if (file.type === 'file' && file.url) {
+        window.open(file.url, '_blank');
+    }
         });
         
         fileListElement.appendChild(fileItem);
@@ -151,20 +159,20 @@ function openFile(file) {
         alert(`文件 ${file.name} 没有可访问的URL`);
         return;
     }
-    
+
     const extension = file.name.split('.').pop().toLowerCase();
-    const viewableTypes = ['pdf', 'jpg', 'jpeg', 'png', 'gif', 'html', 'htm', 'txt', 'md'];
-    
-    if (viewableTypes.includes(extension)) {
+    const audioTypes = ['mp3', 'wav', 'ogg', 'aac', 'flac'];
+
+    if (audioTypes.includes(extension)) {
+        // 新：指向music目录下的播放器
+        const encodedUrl = encodeURIComponent(file.url);
+        window.open(`music/index.html?url=${encodedUrl}`, '_blank');
+    }
+    // 其他文件保持原有逻辑
+    else if (['pdf', 'jpg', 'jpeg', 'png', 'gif', 'html', 'htm', 'txt', 'md'].includes(extension)) {
         window.open(file.url, '_blank');
     } else {
-        const a = document.createElement('a');
-        a.href = file.url;
-        a.download = file.name;
-        a.target = '_blank';
-        document.body.appendChild(a);
-        a.click();
-        document.body.removeChild(a);
+        downloadFile(file);
     }
 }
 
