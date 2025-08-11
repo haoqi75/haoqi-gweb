@@ -1,11 +1,9 @@
 function initRouter() {
     // 初始加载时检查哈希路由
-    window.addEventListener('load', () => {
-        const hashPath = getPathFromHash();
-        if (hashPath) {
-            renderFileList(hashPath);
-        }
-    });
+    const hashPath = getPathFromHash();
+    if (hashPath) {
+        renderFileList(hashPath);
+    }
 
     // 哈希变化时响应
     window.addEventListener('hashchange', () => {
@@ -41,23 +39,6 @@ const currentPathElement = document.getElementById('currentPath');
 const goUpButton = document.getElementById('goUp');
 const refreshButton = document.getElementById('refresh');
 
-// 初始化
-document.addEventListener('DOMContentLoaded', () => {
-    document.addEventListener('DOMContentLoaded', () => {
-    initRouter();
-    loadFileData().then(() => {
-        const initialPath = getPathFromHash();
-        renderFileList(initialPath);
-    }).catch(error => {
-        console.error('加载文件数据失败:', error);
-        fileListElement.innerHTML = '<div class="file-item error">无法加载文件列表</div>';
-    });
-    
-    // 事件监听
-    goUpButton.addEventListener('click', goUp);
-    refreshButton.addEventListener('click', refresh);
-});
-
 // 加载JSON文件数据
 async function loadFileData() {
     try {
@@ -66,22 +47,24 @@ async function loadFileData() {
             throw new Error(`HTTP error! status: ${response.status}`);
         }
         fileData = await response.json();
-    } .catch(error => {
-    console.error('加载文件数据失败:', error);
-    fileListElement.innerHTML = `
-        <div class="file-item error">
-            无法加载文件列表: ${error.message}
-            <br>请检查控制台获取详细信息
-        </div>
-    `;
-    });
+        return true;
+    } catch (error) {
+        console.error('加载文件数据失败:', error);
+        fileListElement.innerHTML = `
+            <div class="file-item error">
+                无法加载文件列表: ${error.message}
+                <br>请确认files.json文件存在且格式正确
+            </div>
+        `;
+        return false;
+    }
 }
 
 // 渲染文件列表
 function renderFileList(path) {
     currentPath = path;
     currentPathElement.textContent = path;
-    updateHashPath(path); // 添加这行来更新URL
+    updateHashPath(path);
     
     const files = getFilesAtPath(path);
     fileListElement.innerHTML = '';
@@ -113,7 +96,6 @@ function renderFileList(path) {
         
         fileItem.addEventListener('click', () => handleFileClick(file));
         
-        // 右键菜单 - 在新标签页打开
         fileItem.addEventListener('contextmenu', (e) => {
             e.preventDefault();
             if (file.type === 'file' && file.url) {
@@ -126,14 +108,13 @@ function renderFileList(path) {
 }
 
 // 获取路径下的文件
-// 修改后的获取路径下文件函数
 function getFilesAtPath(path) {
     if (path === '/') {
-        return fileData.files;
+        return fileData.files || [];
     }
     
     const pathParts = path.split('/').filter(part => part !== '');
-    let currentLevel = fileData.files;
+    let currentLevel = fileData.files || [];
     
     for (const part of pathParts) {
         const found = currentLevel.find(item => item.name === part && item.type === 'folder');
@@ -144,12 +125,10 @@ function getFilesAtPath(path) {
         }
     }
     
-    // 为返回的文件动态添加path属性
-    return currentLevel.map(item => {
-        const itemWithPath = {...item};
-        itemWithPath.path = `${path}${path.endsWith('/') ? '' : '/'}${item.name}`;
-        return itemWithPath;
-    });
+    return currentLevel.map(item => ({
+        ...item,
+        path: `${path}${path.endsWith('/') ? '' : '/'}${item.name}`
+    }));
 }
 
 // 处理文件点击
@@ -161,24 +140,19 @@ function handleFileClick(file) {
     }
 }
 
-// 打开文件 - 实际实现
+// 打开文件
 function openFile(file) {
     if (!file.url) {
         alert(`文件 ${file.name} 没有可访问的URL`);
         return;
     }
     
-    // 根据文件类型处理
     const extension = file.name.split('.').pop().toLowerCase();
-    
-    // 可以直接在浏览器中打开的文件类型
     const viewableTypes = ['pdf', 'jpg', 'jpeg', 'png', 'gif', 'html', 'htm', 'txt', 'md'];
     
     if (viewableTypes.includes(extension)) {
-        // 直接在新标签页打开
         window.open(file.url, '_blank');
     } else {
-        // 其他类型文件尝试下载
         const a = document.createElement('a');
         a.href = file.url;
         a.download = file.name;
@@ -196,45 +170,40 @@ function goUp() {
     const pathParts = currentPath.split('/').filter(part => part !== '');
     pathParts.pop();
     const newPath = pathParts.length > 0 ? `/${pathParts.join('/')}` : '/';
-    
     renderFileList(newPath);
 }
 
 // 刷新
 function refresh() {
-    loadFileData().then(() => {
-        renderFileList(currentPath);
-    }).catch(error => {
-        console.error('刷新文件数据失败:', error);
-        fileListElement.innerHTML = '<div class="file-item error">刷新失败</div>';
+    loadFileData().then((success) => {
+        if (success) {
+            renderFileList(currentPath);
+        }
     });
 }
 
 // 获取文件图标
 function getFileIcon(filename) {
     const extension = filename.split('.').pop().toLowerCase();
-    
     const icons = {
-        'pdf': '📄',
-        'doc': '📄',
-        'docx': '📄',
-        'xls': '📊',
-        'xlsx': '📊',
-        'ppt': '📊',
-        'pptx': '📊',
-        'jpg': '🖼️',
-        'jpeg': '🖼️',
-        'png': '🖼️',
-        'gif': '🖼️',
-        'html': '🌐',
-        'htm': '🌐',
-        'js': '📜',
-        'css': '🎨',
-        'json': '🔣',
-        'md': '📝',
-        'txt': '📝',
-        'mp3': '🎵'
+        'pdf': '📄', 'doc': '📄', 'docx': '📄',
+        'xls': '📊', 'xlsx': '📊', 'ppt': '📊', 'pptx': '📊',
+        'jpg': '🖼️', 'jpeg': '🖼️', 'png': '🖼️', 'gif': '🖼️',
+        'html': '🌐', 'htm': '🌐', 'js': '📜', 'css': '🎨',
+        'json': '🔣', 'md': '📝', 'txt': '📝', 'mp3': '🎵'
     };
-    
     return icons[extension] || '📄';
 }
+
+// 初始化应用
+async function initializeApp() {
+    const loaded = await loadFileData();
+    if (loaded) {
+        initRouter();
+        goUpButton.addEventListener('click', goUp);
+        refreshButton.addEventListener('click', refresh);
+    }
+}
+
+// 启动应用
+document.addEventListener('DOMContentLoaded', initializeApp);
