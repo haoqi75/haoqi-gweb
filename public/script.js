@@ -44,7 +44,7 @@ const refreshButton = document.getElementById('refresh');
 // 初始化
 document.addEventListener('DOMContentLoaded', () => {
     document.addEventListener('DOMContentLoaded', () => {
-    initRouter(); // 添加这行
+    initRouter();
     loadFileData().then(() => {
         const initialPath = getPathFromHash();
         renderFileList(initialPath);
@@ -66,9 +66,15 @@ async function loadFileData() {
             throw new Error(`HTTP error! status: ${response.status}`);
         }
         fileData = await response.json();
-    } catch (error) {
-        throw error;
-    }
+    } .catch(error => {
+    console.error('加载文件数据失败:', error);
+    fileListElement.innerHTML = `
+        <div class="file-item error">
+            无法加载文件列表: ${error.message}
+            <br>请检查控制台获取详细信息
+        </div>
+    `;
+    });
 }
 
 // 渲染文件列表
