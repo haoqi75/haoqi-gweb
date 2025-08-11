@@ -138,3 +138,36 @@ h1 {
         padding: 10px;
     }
 }
+
+/* 标题栏图标样式 */
+.header-icon-title {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 15px;
+}
+
+.header-icon {
+    width: 40px;
+    height: 40px;
+    object-fit: contain;
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+    transition: transform 0.3s ease;
+}
+
+.header-icon:hover {
+    transform: scale(1.1) rotate(10deg);
+}
+
+/* 响应式调整 */
+@media (max-width: 600px) {
+    .header-icon {
+        width: 30px;
+        height: 30px;
+    }
+    
+    .header-icon-title {
+        gap: 10px;
+    }
+}

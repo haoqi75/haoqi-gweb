@@ -83,6 +83,7 @@ function renderFileList(path) {
 }
 
 // 获取路径下的文件
+// 修改后的获取路径下文件函数
 function getFilesAtPath(path) {
     if (path === '/') {
         return fileData.files;
@@ -100,7 +101,12 @@ function getFilesAtPath(path) {
         }
     }
     
-    return currentLevel;
+    // 为返回的文件动态添加path属性
+    return currentLevel.map(item => {
+        const itemWithPath = {...item};
+        itemWithPath.path = `${path}${path.endsWith('/') ? '' : '/'}${item.name}`;
+        return itemWithPath;
+    });
 }
 
 // 处理文件点击
