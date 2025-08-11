@@ -2,6 +2,45 @@
 let currentPath = '/';
 let fileData = { files: [] };
 
+function initRouter() {
+    // 初始加载时检查哈希路由
+    window.addEventListener('load', () => {
+        const hashPath = getPathFromHash();
+        if (hashPath) {
+            renderFileList(hashPath);
+        }
+    });
+
+    // 哈希变化时响应
+    window.addEventListener('hashchange', () => {
+        const hashPath = getPathFromHash();
+        if (hashPath) {
+            renderFileList(hashPath);
+        }
+    });
+}
+
+// 从哈希获取路径
+function getPathFromHash() {
+    const hash = window.location.hash;
+    if (hash.startsWith('#!/')) {
+        return hash.substring(3) || '/';
+    }
+    return '/';
+}
+
+// 更新哈希路由
+function updateHashPath(path) {
+    const normalizedPath = path === '/' ? '' : path;
+    window.location.hash = `#!/${normalizedPath}`;
+}
+
+// 修改原有的 renderFileList 函数
+function renderFileList(path) {
+    currentPath = path;
+    currentPathElement.textContent = path;
+    updateHashPath(path); // 添加这行来更新URL
+
 // DOM元素
 const fileListElement = document.getElementById('fileList');
 const currentPathElement = document.getElementById('currentPath');
@@ -10,8 +49,11 @@ const refreshButton = document.getElementById('refresh');
 
 // 初始化
 document.addEventListener('DOMContentLoaded', () => {
+    document.addEventListener('DOMContentLoaded', () => {
+    initRouter(); // 添加这行
     loadFileData().then(() => {
-        renderFileList(currentPath);
+        const initialPath = getPathFromHash();
+        renderFileList(initialPath);
     }).catch(error => {
         console.error('加载文件数据失败:', error);
         fileListElement.innerHTML = '<div class="file-item error">无法加载文件列表</div>';

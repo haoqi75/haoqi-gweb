@@ -3,12 +3,10 @@
         {
             "name": "StepManiaX",
             "type": "folder",
-            "path": "/StepManiaX",
             "children": [
                 {
                     "name": "Ari Oh (Factory Team Eurobeat Mix) - Jenny Kee.mp3",
                     "type": "file",
-                    "path": "/StepManiaX/Ari Oh (Factory Team Eurobeat Mix) - Jenny Kee.mp3",
                     "size": "1.49 MB",
                     "url": "https://host.qtdt.dpdns.org/StepManiaX/Ari%20Oh%20(Factory%20Team%20Eurobeat%20Mix)%20-%20Jenny%20Kee.mp3"
                 }
@@ -17,7 +15,6 @@
         {
             "name": "GitHub.url",
             "type": "file",
-            "path": "/GitHub.url",
             "size": "1 B",
             "url": "https://github.com/haoqi75/haoqi-gweb"
         }
