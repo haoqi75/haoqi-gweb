@@ -25,7 +25,11 @@ function getPathFromHash() {
 
 // 更新哈希路由
 function updateHashPath(path) {
-    const normalizedPath = path === '/' ? '' : path;
+    // 规范化路径：移除重复斜杠，确保不以斜杠结尾（根路径除外）
+    const normalizedPath = path === '/' ? '' : path
+        .replace(/\/+/g, '/')  // 替换多个连续斜杠为单个
+        .replace(/\/$/, '');   // 移除末尾斜杠
+    
     window.location.hash = `#!/${normalizedPath}`;
 }
 
@@ -43,10 +47,23 @@ const refreshButton = document.getElementById('refresh');
 async function loadFileData() {
     try {
         const response = await fetch('files.json');
-        if (!response.ok) {
-            throw new Error(`HTTP error! status: ${response.status}`);
-        }
-        fileData = await response.json();
+        if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+        
+        const data = await response.json();
+        
+        // 预处理.url文件（可选）
+        fileData.files = data.files.map(file => {
+            if (file.name.endsWith('.url')) {
+                return {
+                    ...file,
+                    type: 'file',
+                    icon: '🌐',
+                    // 可以添加content字段存储文件内容（如果需要解析）
+                };
+            }
+            return file;
+        });
+        
         return true;
     } catch (error) {
         console.error('加载文件数据失败:', error);
@@ -117,18 +134,24 @@ function renderFileList(path) {
 
 // 获取路径下的文件
 function getFilesAtPath(path) {
-    if (path === '/') {
+    // 统一规范化输入路径
+    const normalizedPath = sanitizePath(path).replace(/^\/|\/$/g, '');
+    const effectivePath = normalizedPath ? `/${normalizedPath}` : '/';
+    
+    if (effectivePath === '/') {
         return (fileData.files || []).map(item => ({
             ...item,
             path: `/${item.name}`
         }));
     }
     
-    const pathParts = path.split('/').filter(part => part !== '');
+    const pathParts = normalizedPath.split('/');
     let currentLevel = fileData.files || [];
     
     for (const part of pathParts) {
-        const found = currentLevel.find(item => item.name === part && item.type === 'folder');
+        const found = currentLevel.find(item => 
+            item.name === part && item.type === 'folder'
+        );
         if (found && found.children) {
             currentLevel = found.children;
         } else {
@@ -136,17 +159,18 @@ function getFilesAtPath(path) {
         }
     }
     
+    // 统一使用sanitizePath处理输出路径
     return currentLevel.map(item => ({
         ...item,
-        path: `${path}${path.endsWith('/') ? '' : '/'}${item.name}`
+        path: sanitizePath(`${effectivePath}/${item.name}`)
     }));
 }
 
 // 处理文件点击
 function handleFileClick(file) {
     if (file.type === 'folder') {
-        // 确保路径以/开头且格式正确
-        const newPath = file.path.startsWith('/') ? file.path : `/${file.path}`;
+        // 确保路径标准化
+        const newPath = file.path.replace(/\/+/g, '/');
         renderFileList(newPath);
     } else {
         openFile(file);
@@ -161,6 +185,13 @@ function openFile(file) {
     }
 
     const extension = file.name.split('.').pop().toLowerCase();
+    
+    // 特殊处理.url文件
+    if (extension === 'url') {
+        handleUrlFile(file);
+        return;
+    }
+    
     const audioTypes = ['mp3', 'wav', 'ogg', 'aac', 'flac'];
 
     if (audioTypes.includes(extension)) {
@@ -180,9 +211,10 @@ function openFile(file) {
 function goUp() {
     if (currentPath === '/') return;
     
-    const pathParts = currentPath.split('/').filter(part => part !== '');
+    const pathParts = currentPath.split('/').filter(Boolean);
     pathParts.pop();
-    const newPath = pathParts.length > 0 ? `/${pathParts.join('/')}` : '/';
+    const newPath = pathParts.length ? `/${pathParts.join('/')}` : '/';
+    
     renderFileList(newPath);
 }
 
@@ -203,9 +235,34 @@ function getFileIcon(filename) {
         'xls': '📊', 'xlsx': '📊', 'ppt': '📊', 'pptx': '📊',
         'jpg': '🖼️', 'jpeg': '🖼️', 'png': '🖼️', 'gif': '🖼️',
         'html': '🌐', 'htm': '🌐', 'js': '📜', 'css': '🎨',
-        'json': '🔣', 'md': '📝', 'txt': '📝', 'mp3': '🎵'
+        'json': '🔣', 'md': '📝', 'txt': '📝', 'url': '🌐',
+        'mp3': '🎵'
     };
     return icons[extension] || '📄';
+}
+
+// 增强版路径消毒函数
+function sanitizePath(path) {
+    return path
+        .replace(/[^a-zA-Z0-9\/\-_.]/g, '')  // 允许点和中划线
+        .replace(/\/+/g, '/')                 // 合并连续斜杠
+        .replace(/^\/|\/$/g, '')              // 去除首尾斜杠
+        || '/';                               // 空路径返回根
+}
+
+// 新增URL文件处理函数
+function handleUrlFile(file) {
+    if (file.content) {
+        // 如果文件包含[InternetShortcut]内容
+        const urlMatch = file.content.match(/URL=(.+)/i);
+        if (urlMatch && urlMatch[1]) {
+            window.open(urlMatch[1], '_blank');
+            return;
+        }
+    }
+    
+    // 默认行为：直接打开文件链接
+    window.open(file.url, '_blank');
 }
 
 // 初始化应用
