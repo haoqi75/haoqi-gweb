@@ -1,0 +1,55 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>动态音乐播放器</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <main class="app">
+    <section class="player-card">
+      <div class="cover" id="cover">
+        <div class="pulse" aria-hidden="true"></div>
+      </div>
+
+      <div class="meta">
+        <h1 id="title">音乐播放器</h1>
+        <p id="artist">未加载音频</p>
+      </div>
+
+      <div class="controls">
+        <button id="btn-rewind" title="后退 10s">⟲</button>
+        <button id="btn-play" class="play" title="播放/暂停">▶</button>
+        <button id="btn-forward" title="前进 10s">⟳</button>
+      </div>
+
+      <div class="progress-area">
+        <span id="current">0:00</span>
+        <div id="progress-wrap" class="progress-wrap" aria-label="进度条">
+          <div id="progress" class="progress"></div>
+        </div>
+        <span id="duration">0:00</span>
+      </div>
+
+      <div class="extras">
+        <label class="vol">
+          🔊 <input id="volume" type="range" min="0" max="1" step="0.01" value="0.8">
+        </label>
+        <button id="btn-loop" title="循环播放">🔁</button>
+        <button id="btn-mute" title="静音">🔈</button>
+      </div>
+
+      <div class="load">
+        <input id="url-input" type="url" placeholder="粘贴音乐链接或使用 ?url= 参数加载" />
+        <button id="btn-load">加载</button>
+      </div>
+
+    </section>
+  </main>
+
+  <audio id="audio" preload="metadata"></audio>
+
+  <script src="script.js"></script>
+</body>
+</html>
