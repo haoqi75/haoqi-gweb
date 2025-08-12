@@ -25,10 +25,18 @@ function getPathFromHash() {
 
 // 更新哈希路由
 function updateHashPath(path) {
-    // 规范化路径：移除重复斜杠，确保不以斜杠结尾（根路径除外）
-    const normalizedPath = path === '/' ? '' : path
-        .replace(/\/+/g, '/')  // 替换多个连续斜杠为单个
-        .replace(/\/$/, '');   // 移除末尾斜杠
+    // 处理根路径特殊情况
+    if (path === '/') {
+        window.location.hash = '#!/';
+        return;
+    }
+    
+    // 规范化路径：
+    // 1. 替换连续斜杠为单个
+    // 2. 移除开头和结尾的斜杠
+    const normalizedPath = path.replace(/\/+/g, '/')
+                              .replace(/^\//, '')
+                              .replace(/\/$/, '');
     
     window.location.hash = `#!/${normalizedPath}`;
 }
@@ -134,17 +142,20 @@ function renderFileList(path) {
 
 // 获取路径下的文件
 function getFilesAtPath(path) {
-    // 统一规范化输入路径
-    const normalizedPath = sanitizePath(path).replace(/^\/|\/$/g, '');
-    const effectivePath = normalizedPath ? `/${normalizedPath}` : '/';
+    // 规范化输入路径
+    const normalizedPath = path === '/' ? '' : path.replace(/\/+/g, '/')
+                                                  .replace(/^\//, '')
+                                                  .replace(/\/$/, '');
     
-    if (effectivePath === '/') {
+    // 处理根目录
+    if (!normalizedPath) {
         return (fileData.files || []).map(item => ({
             ...item,
-            path: `/${item.name}`
+            path: item.name // 不再添加前导斜杠
         }));
     }
     
+    // 处理子目录
     const pathParts = normalizedPath.split('/');
     let currentLevel = fileData.files || [];
     
@@ -159,19 +170,18 @@ function getFilesAtPath(path) {
         }
     }
     
-    // 统一使用sanitizePath处理输出路径
+    // 生成新路径（不再自动添加斜杠）
     return currentLevel.map(item => ({
         ...item,
-        path: sanitizePath(`${effectivePath}/${item.name}`)
+        path: `${normalizedPath}/${item.name}`
     }));
 }
 
 // 处理文件点击
 function handleFileClick(file) {
     if (file.type === 'folder') {
-        // 确保路径标准化
-        const newPath = file.path.replace(/\/+/g, '/');
-        renderFileList(newPath);
+        // 直接使用文件路径，不再额外处理
+        renderFileList(file.path);
     } else {
         openFile(file);
     }
