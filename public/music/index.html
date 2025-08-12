@@ -3,33 +3,35 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>高级音乐播放器</title>
-    <link rel="icon" href="favicon.jpg" type="image/png">
+    <title>音乐播放器</title>
+    <link rel="icon" type="image/jpeg" href="favicon.jpg">
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
     <div class="player-container">
-        <h1>🎵 音乐播放器</h1>
         <div class="now-playing" id="nowPlaying">加载中...</div>
-
-        <!-- 使用自定义样式隐藏默认播放器控件 -->
         <div class="custom-controls">
-            <div id="playPauseBtn" class="btn" title="播放/暂停">▶</div>
-            <div id="rewindBtn" class="btn" title="后退 10秒">⟲</div>
-            <div id="forwardBtn" class="btn" title="前进 10秒">⟳</div>
-            <div class="progress-bar" id="progressBar">
-                <div id="progress" class="progress"></div>
-            </div>
-            <input type="range" id="volumeControl" min="0" max="1" step="0.01" value="1" class="volume-slider">
+            <button id="playPause">▶</button>
+            <span id="currentTime">0:00</span> / <span id="duration">0:00</span>
+            <input type="range" id="seekBar" min="0" value="0">
         </div>
-
-        <audio id="player" preload="metadata">
-            您的浏览器不支持音频元素
-        </audio>
-
-        <button class="close-btn" onclick="window.close()">关闭播放器</button>
+        <div class="extra-controls">
+            <label>速度:
+                <select id="speedControl">
+                    <option value="0.5">0.5x</option>
+                    <option value="0.75">0.75x</option>
+                    <option value="1" selected>1x</option>
+                    <option value="1.25">1.25x</option>
+                    <option value="1.5">1.5x</option>
+                    <option value="2">2x</option>
+                </select>
+            </label>
+            <label>音量:
+                <input type="range" id="volumeControl" min="0" max="1" step="0.01" value="1">
+            </label>
+        </div>
+        <audio id="player"></audio>
     </div>
-
     <script src="script.js"></script>
 </body>
 </html>

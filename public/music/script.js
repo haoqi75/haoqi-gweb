@@ -1,61 +1,56 @@
-// 获取URL参数
 const urlParams = new URLSearchParams(window.location.search);
 const audioUrl = decodeURIComponent(urlParams.get('url') || '');
 
-// 设置播放器
 const player = document.getElementById('player');
 const nowPlaying = document.getElementById('nowPlaying');
-const playPauseBtn = document.getElementById('playPauseBtn');
-const rewindBtn = document.getElementById('rewindBtn');
-const forwardBtn = document.getElementById('forwardBtn');
-const progressBar = document.getElementById('progressBar');
-const progress = document.getElementById('progress');
+const playPause = document.getElementById('playPause');
+const currentTimeEl = document.getElementById('currentTime');
+const durationEl = document.getElementById('duration');
+const seekBar = document.getElementById('seekBar');
+const speedControl = document.getElementById('speedControl');
 const volumeControl = document.getElementById('volumeControl');
 
 if (audioUrl) {
     player.src = audioUrl;
-    nowPlaying.textContent = decodeURIComponent(audioUrl.split('/').pop()) || '当前曲目';
-
-    player.addEventListener('error', () => {
-        nowPlaying.textContent = '播放失败: ' + (player.error?.message || '未知错误');
-    });
+    nowPlaying.textContent = decodeURIComponent(audioUrl.split('/').pop() || '当前曲目');
 } else {
     nowPlaying.textContent = '未指定音频文件';
 }
 
-// 播放/暂停
-playPauseBtn.addEventListener('click', () => {
+playPause.addEventListener('click', () => {
     if (player.paused) {
         player.play();
-        playPauseBtn.textContent = '❚❚';  // 播放时切换为暂停图标
+        playPause.textContent = '⏸';
     } else {
         player.pause();
-        playPauseBtn.textContent = '▶';   // 暂停时切换为播放图标
+        playPause.textContent = '▶';
     }
 });
 
-// 后退 10秒
-rewindBtn.addEventListener('click', () => {
-    player.currentTime = Math.max(0, player.currentTime - 10);
+player.addEventListener('loadedmetadata', () => {
+    durationEl.textContent = formatTime(player.duration);
+    seekBar.max = player.duration;
 });
 
-// 前进 10秒
-forwardBtn.addEventListener('click', () => {
-    player.currentTime = Math.min(player.duration || 0, player.currentTime + 10);
-});
-
-// 进度条
 player.addEventListener('timeupdate', () => {
-    const percent = (player.currentTime / player.duration) * 100;
-    progress.style.width = percent + '%';
+    currentTimeEl.textContent = formatTime(player.currentTime);
+    seekBar.value = player.currentTime;
 });
 
-progressBar.addEventListener('click', (e) => {
-    const percent = (e.offsetX / progressBar.offsetWidth);
-    player.currentTime = percent * player.duration;
+seekBar.addEventListener('input', () => {
+    player.currentTime = seekBar.value;
 });
 
-// 音量调节
+speedControl.addEventListener('change', () => {
+    player.playbackRate = parseFloat(speedControl.value);
+});
+
 volumeControl.addEventListener('input', () => {
     player.volume = volumeControl.value;
 });
+
+function formatTime(seconds) {
+    const minutes = Math.floor(seconds / 60);
+    const secs = Math.floor(seconds % 60).toString().padStart(2, '0');
+    return `${minutes}:${secs}`;
+}
