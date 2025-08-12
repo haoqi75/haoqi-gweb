@@ -5,7 +5,11 @@ const audioUrl = decodeURIComponent(urlParams.get('url') || '');
 // 设置播放器
 const player = document.getElementById('player');
 const nowPlaying = document.getElementById('nowPlaying');
-const speedControl = document.getElementById('speedControl');
+const playPauseBtn = document.getElementById('playPauseBtn');
+const rewindBtn = document.getElementById('rewindBtn');
+const forwardBtn = document.getElementById('forwardBtn');
+const progressBar = document.getElementById('progressBar');
+const progress = document.getElementById('progress');
 const volumeControl = document.getElementById('volumeControl');
 
 if (audioUrl) {
@@ -19,12 +23,39 @@ if (audioUrl) {
     nowPlaying.textContent = '未指定音频文件';
 }
 
-// 播放速度调整
-speedControl.addEventListener('change', () => {
-    player.playbackRate = parseFloat(speedControl.value);
+// 播放/暂停
+playPauseBtn.addEventListener('click', () => {
+    if (player.paused) {
+        player.play();
+        playPauseBtn.textContent = '❚❚';  // 播放时切换为暂停图标
+    } else {
+        player.pause();
+        playPauseBtn.textContent = '▶';   // 暂停时切换为播放图标
+    }
+});
+
+// 后退 10秒
+rewindBtn.addEventListener('click', () => {
+    player.currentTime = Math.max(0, player.currentTime - 10);
+});
+
+// 前进 10秒
+forwardBtn.addEventListener('click', () => {
+    player.currentTime = Math.min(player.duration || 0, player.currentTime + 10);
+});
+
+// 进度条
+player.addEventListener('timeupdate', () => {
+    const percent = (player.currentTime / player.duration) * 100;
+    progress.style.width = percent + '%';
+});
+
+progressBar.addEventListener('click', (e) => {
+    const percent = (e.offsetX / progressBar.offsetWidth);
+    player.currentTime = percent * player.duration;
 });
 
 // 音量调节
 volumeControl.addEventListener('input', () => {
-    player.volume = parseFloat(volumeControl.value);
+    player.volume = volumeControl.value;
 });
